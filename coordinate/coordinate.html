@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coordinate</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: aliceblue;
+      }
+      .box {
+        height: 200px;
+        width: 200px;
+        margin: 20px;
+        border: 1px solid black;
+        background-color: beige;
+      }
+
+      .active {
+        background-color: lightcoral;
+      }
+
+      aside {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <aside>
+      <button class="scroll__active">scroll to active box</button>
+      <button class="scroll__active">scroll to active box</button>
+      <button class="scroll__active">scroll to active box</button>
+      <button class="scroll__by">scroll by 100px</button>
+      <button class="scroll__to">scroll to 100px</button>
+      <button class="scroll__into">scroll into active</button>
+    </aside>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box active"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <script>
+      const active = document.querySelector('.active');
+      active.addEventListener('click', e => {
+        const rect = active.getBoundingClientRect();
+        console.log(rect);
+        console.log(`
+        Client X/Y: ${e.clientX}, ${e.clientY}
+        Screen X/Y: ${e.screenX}, ${e.screenY}
+        Page X/Y: ${e.pageX}, ${e.pageY}
+        page: ${document.body.scrollHeight}
+        `);
+      });
+
+      function screen(e) {
+        console.log(`
+        Client X/Y: ${e.clientX}, ${e.clientY}
+        Screen X/Y: ${e.screenX}, ${e.screenY}
+        Page X/Y: ${e.pageX}, ${e.pageY}
+        `);
+      }
+
+      const button = document.querySelectorAll('.scroll__active');
+      console.log(button);
+      const buttons = button.forEach(button =>
+        button.addEventListener('click', () => {
+          console.log('click');
+          active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        })
+      );
+
+      const scrollBy = document.querySelector('.scroll__by');
+      const scrollTo = document.querySelector('.scroll__to');
+      const scrollInto = document.querySelector('.scroll__into');
+
+      scrollBy.addEventListener('click', () => {
+        window.scrollBy({ top: 100, behavior: 'smooth' });
+      });
+
+      scrollTo.addEventListener('click', e => {
+        window.scrollTo({ top: 100, behavior: 'smooth' });
+      });
+
+      scrollInto.addEventListener('click', () => {
+        active.scrollIntoView({ behavior: 'smooth' });
+      });
+    </script>
+  </body>
+</html>
