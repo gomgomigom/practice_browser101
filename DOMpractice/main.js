@@ -10,25 +10,18 @@ function onAdd() {
   const text = input.value;
   if (text == '') {
     input.focus();
-    console.log('내용을 입력하세요');
     return;
   }
-  console.log(text);
   // 새로운 아이템을 만듬 (텍스트 + 삭제 버튼)
   const newItem = createItem(text);
-  console.log(newItem);
   // items  컨테이너 안에 새로 만든 아이템을 추가한다
   items.appendChild(newItem);
-  // 새로 추가된 아이템으로 스크롤링
   newItem.scrollIntoView({ behavior: 'smooth' });
+  // 새로 추가된 아이템으로 스크롤링
   // 인풋을 초기화
   input.value = '';
   input.focus();
 }
-
-addBtn.addEventListener('click', () => {
-  onAdd();
-});
 
 function createItem(text) {
   const itemRow = document.createElement('li');
@@ -60,7 +53,11 @@ function createItem(text) {
   return itemRow;
 }
 
-input.addEventListener('keypress', e => {
+addBtn.addEventListener('click', () => {
+  onAdd();
+});
+
+input.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     onAdd();
   }
