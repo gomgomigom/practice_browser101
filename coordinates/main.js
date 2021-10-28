@@ -18,6 +18,7 @@ addEventListener('load', () => {
     horozontal.style.transform = `translateX(${x}px)`;
     target.style.transform = `translate(${x - targetHalfWidth}px,${y - targetHalfHeight}px)`;
     tag.style.transform = `translate(${x + 20}px,${y + 20}px)`;
+    tag.innerHTML = `x: ${x}px<br /> y: ${y}px`;
   });
 });
 
