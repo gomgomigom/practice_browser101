@@ -11,20 +11,20 @@ console.log(targetRect);
 
 addEventListener('load', () => {
   document.addEventListener('mousemove', e => {
-    const x = e.clientX;
-    const y = e.clientY;
-    console.log(x, y);
-    vertical.style.transform = `translateY(${y}px)`;
-    horozontal.style.transform = `translateX(${x}px)`;
-    target.style.transform = `translate(${x - targetHalfWidth}px,${y - targetHalfHeight}px)`;
-    tag.style.transform = `translate(${x + 20}px,${y + 20}px)`;
-    tag.innerHTML = `x: ${x}px<br /> y: ${y}px`;
+    coordinate(e);
+  });
+  document.addEventListener('drag', e => {
+    coordinate(e);
   });
 });
 
-document.addEventListener('mousedown', () => {
-  target.style.background = 'red';
-});
-document.addEventListener('mouseup', () => {
-  target.style.background = 'transparent';
-});
+function coordinate(e) {
+  const x = e.clientX;
+  const y = e.clientY;
+  console.log(x, y);
+  vertical.style.transform = `translateY(${y}px)`;
+  horozontal.style.transform = `translateX(${x}px)`;
+  target.style.transform = `translate(${x - targetHalfWidth}px,${y - targetHalfHeight}px)`;
+  tag.style.transform = `translate(${x + 20}px,${y + 20}px)`;
+  tag.innerHTML = `x: ${x}px<br /> y: ${y}px`;
+}
