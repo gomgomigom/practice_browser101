@@ -16,40 +16,26 @@ function onAdd() {
   const newItem = createItem(text);
   // items  컨테이너 안에 새로 만든 아이템을 추가한다
   items.appendChild(newItem);
-  newItem.scrollIntoView({ behavior: 'smooth' });
   // 새로 추가된 아이템으로 스크롤링
+  newItem.scrollIntoView({ behavior: 'smooth' });
   // 인풋을 초기화
   input.value = '';
   input.focus();
 }
 
+let id = 0;
 function createItem(text) {
   const itemRow = document.createElement('li');
   itemRow.setAttribute('class', 'item__row');
-
-  const item = document.createElement('div');
-  item.setAttribute('class', 'item');
-
-  const itemName = document.createElement('span');
-  itemName.setAttribute('class', 'item__name');
-  itemName.innerText = text;
-
-  const itemDelete = document.createElement('button');
-  itemDelete.setAttribute('class', 'item__delete');
-  itemDelete.innerHTML = '<i class="fas fa-trash-alt"></i>';
-  itemDelete.addEventListener('click', e => {
-    items.removeChild(itemRow);
-  });
-
-  const itemDivider = document.createElement('div');
-  itemDivider.setAttribute('class', 'item__divider');
-
-  item.appendChild(itemName);
-  item.appendChild(itemDelete);
-
-  itemRow.appendChild(item);
-  itemRow.appendChild(itemDivider);
-
+  itemRow.setAttribute('data-id', id);
+  itemRow.innerHTML = `
+  <div class="item" data-id=${id}>
+    <span class="item__name">${text}</span>
+    <button class="item__delete"><i class="fas fa-trash-alt" data-id=${id}></i></button>
+  </div>
+  <div class="item__divider"></div>
+  `;
+  id++;
   return itemRow;
 }
 
@@ -60,5 +46,13 @@ addBtn.addEventListener('click', () => {
 input.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     onAdd();
+  }
+});
+
+items.addEventListener('click', event => {
+  const id = event.target.dataset.id;
+  if (id) {
+    const toBeDeleted = document.querySelector(`.item__row[data-id="${id}"]`);
+    toBeDeleted.remove();
   }
 });
