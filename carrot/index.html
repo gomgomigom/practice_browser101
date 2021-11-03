@@ -6,17 +6,24 @@
     <title>Pull Carrot</title>
     <link rel="stylesheet" href="style.css" />
     <script src="./main.js" defer></script>
+    <script src="https://kit.fontawesome.com/a32a09b854.js" crossorigin="anonymous"></script>
   </head>
   <body>
     <section class="main">
       <div class="controll">
-        <button class="start">ㅁ</button>
+        <button class="start"><i class="fas fa-square"></i></button>
         <p class="timer">0:8</p>
         <p class="count">10</p>
       </div>
       <div class="playground">
-        <img src="./img/carrot.png" alt="" class="carrot" />
-        <img src="./img/bug.png" alt="" class="bug" />
+        <div class="controll alert">
+          <button class="restart"><i class="fas fa-redo"></i></button>
+          <p class="state">YOU WON</p>
+        </div>
+        <div class="items">
+          <img src="./img/carrot.png" alt="" class="carrot" />
+          <img src="./img/bug.png" alt="" class="bug" />
+        </div>
       </div>
     </section>
   </body>
