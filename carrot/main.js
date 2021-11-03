@@ -31,21 +31,29 @@ setInterval(timer, 1000);
 // random
 const playgroundY = playground.getBoundingClientRect().height;
 const playgroundX = playground.getBoundingClientRect().width;
-const randomX = playgroundX * Math.random() * 0.9;
-const randomY = playgroundY * Math.random() * 0.9;
+const randomX = playgroundX * getRandom() * 0.9;
+const randomY = playgroundY * getRandom() * 0.7;
 console.log(playgroundY);
 console.log(playgroundX);
 
 console.log(randomX);
 console.log(randomY);
+function getRandom() {
+  return Math.random();
+}
 
 function addBugAndCarrot() {
   playground.innerHTML = `
-  <img style="top: ${randomY}px; left:${randomX}px;" src="./img/bug.png" alt="벌레" class="bug" />
+  <img style="top: ${randomY}px; left:${randomX}px;" src="./img/carrot.png" alt="당근" class="carrot" /> 
   `;
 }
+
 {
-  /* <img style="top: ${randomY}px; left:${randomX}px;" src="./img/carrot.png" alt="당근" class="carrot" /> */
+  /* <img style="top: ${randomY}px; left:${randomX}px;" src="./img/bug.png" alt="벌레" class="bug" /> */
 }
 
 addBugAndCarrot();
+console.log(randomX);
+console.log(randomY);
+console.log(randomX);
+console.log(randomY);
