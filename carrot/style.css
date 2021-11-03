@@ -102,3 +102,15 @@ button i {
   color: white;
   font-size: 20px;
 }
+
+/* items */
+.playground {
+  width: 100%;
+  height: 50%;
+  position: relative;
+}
+
+.carrot,
+.bug {
+  position: absolute;
+}
