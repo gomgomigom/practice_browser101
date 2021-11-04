@@ -22,6 +22,11 @@ p,
 button {
   margin-bottom: var(--size-margin);
   padding: 0;
+  transition: all 250ms ease-in;
+}
+
+button:hover {
+  transform: scale(1.15);
 }
 
 /* main */

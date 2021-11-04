@@ -1,7 +1,9 @@
 'use strict';
 
+const CARROT_SIZE = 80;
 const start = document.querySelector('.start');
 const playground = document.querySelector('.playground');
+const playgroundRect = playground.getBoundingClientRect();
 const items = document.querySelector('.items');
 const count = document.querySelector('.count');
 const alertDiv = document.querySelector('.alert');
@@ -35,26 +37,56 @@ function timer() {
 setInterval(timer, 1000);
 
 // random
-const playgroundY = playground.getBoundingClientRect().height;
-const playgroundX = playground.getBoundingClientRect().width;
+// const playgroundY = playground.getBoundingClientRect().height;
+// const playgroundX = playground.getBoundingClientRect().width;
 
-let id = 0;
-function repeat(itemsName) {
-  for (let i = 0; i < 10; i++) {
-    let randomX = playgroundX * Math.random() * 0.9;
-    let randomY = playgroundY * Math.random() * 0.7;
-    const obj = document.createElement('img');
-    obj.setAttribute('style', `top: ${randomY}px; left:${randomX}px;`);
-    obj.setAttribute('src', `./img/${itemsName}.png`);
-    obj.setAttribute('alt', `${itemsName}`);
-    obj.setAttribute('data-id', id);
-    obj.setAttribute('class', `${itemsName}`);
-    items.appendChild(obj);
-    id++;
+// let id = 0;
+// function repeat(itemsName) {
+//   for (let i = 0; i < 10; i++) {
+//     let randomX = playgroundX * Math.random() * 0.9;
+//     let randomY = playgroundY * Math.random() * 0.7;
+//     const obj = document.createElement('img');
+//     obj.setAttribute('style', `top: ${randomY}px; left:${randomX}px;`);
+//     obj.setAttribute('src', `./img/${itemsName}.png`);
+//     obj.setAttribute('alt', `${itemsName}`);
+//     obj.setAttribute('data-id', id);
+//     obj.setAttribute('class', `${itemsName}`);
+//     items.appendChild(obj);
+//     id++;
+//   }
+// }
+// repeat('carrot');
+// repeat('bug');
+// random carrot & bug
+
+function addItem(className, count, imgPath) {
+  const x1 = 0;
+  const y1 = 0;
+  const x2 = playgroundRect.width - CARROT_SIZE;
+  const y2 = playgroundRect.height - CARROT_SIZE;
+  for (let i = 0; i < count; i++) {
+    const item = document.createElement('img');
+    item.setAttribute('class', className);
+    item.setAttribute('src', imgPath);
+    const x = randomNumber(x1, x2);
+    const y = randomNumber(y1, y2);
+    item.style.top = `${y}px`;
+    item.style.left = `${x}px`;
+    items.appendChild(item);
   }
 }
-repeat('carrot');
-repeat('bug');
+
+function initGame() {
+  console.log(playgroundRect);
+  addItem('carrot', 5, './img/carrot.png');
+  addItem('bug', 5, './img/bug.png');
+}
+
+function randomNumber(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+initGame();
 
 // carrot pull
 function carrotPull() {
