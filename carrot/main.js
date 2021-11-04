@@ -21,13 +21,13 @@ start.addEventListener('click', e => {
 });
 
 // count down
-let coundDown = 9;
+let countDown = 9;
 function timer() {
-  if (coundDown >= 0) {
+  if (countDown >= 0) {
     document.querySelector('.timer').innerHTML = `
-    0:${coundDown}
+    0:${countDown}
     `;
-    coundDown--;
+    countDown--;
   } else {
     return;
   }
@@ -72,15 +72,18 @@ function carrotPull() {
 carrotPull();
 
 // count carrot
-document.addEventListener('click', () => {
-  const carrots = document.querySelectorAll('.carrot');
-  const countNumber = carrots.length;
-  console.log(countNumber);
-  count.innerHTML = countNumber;
-  if (countNumber == '0') {
-    alertDiv.classList.add('active');
-  }
-});
+function countCarrot() {
+  document.addEventListener('click', () => {
+    const carrots = document.querySelectorAll('.carrot');
+    const countNumber = carrots.length;
+    console.log(countNumber);
+    count.innerHTML = countNumber;
+    if (countNumber == '0') {
+      alertDiv.classList.add('active');
+    }
+  });
+}
+countCarrot();
 
 // restart
 restart.addEventListener('click', () => {
@@ -88,5 +91,8 @@ restart.addEventListener('click', () => {
   repeat('carrot');
   repeat('bug');
   carrotPull();
+  countDown = 10;
+  setInterval(timer, 1000);
+
   alertDiv.classList.remove('active');
 });
