@@ -5,6 +5,7 @@ const playground = document.querySelector('.playground');
 const items = document.querySelector('.items');
 const count = document.querySelector('.count');
 const alertDiv = document.querySelector('.alert');
+const restart = document.querySelector('.restart');
 
 // start button
 start.addEventListener('click', e => {
@@ -56,16 +57,19 @@ repeat('carrot');
 repeat('bug');
 
 // carrot pull
-const carrots = document.querySelectorAll('.carrot');
-carrots.forEach(element => {
-  console.log(element.dataset.id);
-  element.addEventListener('click', e => {
-    const carrotId = e.target.dataset.id;
-    const toBePull = document.querySelector(`.carrot[data-id="${carrotId}"`);
-    toBePull.remove();
-    console.log(carrotId);
+function carrotPull() {
+  const carrots = document.querySelectorAll('.carrot');
+  carrots.forEach(element => {
+    console.log(element.dataset.id);
+    element.addEventListener('click', e => {
+      const carrotId = e.target.dataset.id;
+      const toBePull = document.querySelector(`.carrot[data-id="${carrotId}"`);
+      toBePull.remove();
+      console.log(carrotId);
+    });
   });
-});
+}
+carrotPull();
 
 // count carrot
 document.addEventListener('click', () => {
@@ -78,4 +82,11 @@ document.addEventListener('click', () => {
   }
 });
 
-// alert
+// restart
+restart.addEventListener('click', () => {
+  items.innerHTML = '';
+  repeat('carrot');
+  repeat('bug');
+  carrotPull();
+  alertDiv.classList.remove('active');
+});
