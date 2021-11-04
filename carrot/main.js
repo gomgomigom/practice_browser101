@@ -59,6 +59,7 @@ setInterval(timer, 1000);
 // repeat('bug');
 // random carrot & bug
 
+let id = 0;
 function addItem(className, count, imgPath) {
   const x1 = 0;
   const y1 = 0;
@@ -68,11 +69,13 @@ function addItem(className, count, imgPath) {
     const item = document.createElement('img');
     item.setAttribute('class', className);
     item.setAttribute('src', imgPath);
+    item.setAttribute('data-id', id);
     const x = randomNumber(x1, x2);
     const y = randomNumber(y1, y2);
     item.style.top = `${y}px`;
     item.style.left = `${x}px`;
     items.appendChild(item);
+    id++;
   }
 }
 
@@ -120,8 +123,7 @@ countCarrot();
 // restart
 restart.addEventListener('click', () => {
   items.innerHTML = '';
-  repeat('carrot');
-  repeat('bug');
+  initGame();
   carrotPull();
   countDown = 10;
   setInterval(timer, 1000);
