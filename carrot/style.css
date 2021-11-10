@@ -100,6 +100,7 @@ button i {
   background-color: #fff;
   line-height: 19px;
   text-align: center;
+  visibility: hidden;
 }
 
 .count {
@@ -112,6 +113,7 @@ button i {
   text-align: center;
   color: white;
   font-size: 20px;
+  visibility: hidden;
 }
 
 /* items */

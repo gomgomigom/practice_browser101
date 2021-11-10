@@ -1,26 +1,106 @@
 'use strict';
 
 const CARROT_SIZE = 80;
+const CARROT = 7;
+const BUG = 7;
+const GAME_DURATION_SECOND = 3;
+
 const start = document.querySelector('.start');
 const playground = document.querySelector('.playground');
 const playgroundRect = playground.getBoundingClientRect();
 const items = document.querySelector('.items');
-const count = document.querySelector('.count');
 const alertDiv = document.querySelector('.alert');
+const alertState = document.querySelector('.state');
 const restart = document.querySelector('.restart');
+const gameTimer = document.querySelector('.timer');
+const gameCount = document.querySelector('.count');
+
+let started = false;
+let score = 0;
+let time = undefined;
 
 // start button
-start.addEventListener('click', e => {
-  console.log(e.target);
-  if (e.target.tagName !== 'I') {
-    return;
-  }
-  if (e.target.className == 'fas fa-play') {
-    e.target.className = 'fas fa-square';
-  } else {
-    e.target.className = 'fas fa-play';
-  }
-});
+function startBtn() {
+  start.addEventListener('click', e => {
+    console.log(e.target);
+    if (started) {
+      stopGame();
+    } else {
+      startGame();
+    }
+    started = !started;
+
+    // if (e.target.tagName !== 'I') {
+    //   return;
+    // }
+    // if (e.target.className == 'fas fa-play') {
+    //   e.target.className = 'fas fa-square';
+    // } else {
+    //   e.target.className = 'fas fa-play';
+    // }
+  });
+}
+startBtn();
+
+function startGame() {
+  initGame();
+  countCarrot();
+  carrotPull();
+  showStopButton();
+  showTimerAndScore();
+  startGameTimer();
+}
+
+function startGameTimer() {
+  let remainingTimeSec = GAME_DURATION_SECOND;
+  updateTimerText(remainingTimeSec);
+  time = setInterval(() => {
+    if (remainingTimeSec <= 0) {
+      clearInterval(time);
+      return;
+    }
+    updateTimerText(--remainingTimeSec);
+  }, 1000);
+}
+
+function updateTimerText(time) {
+  const minutes = Math.floor(time / 60);
+  const secon = time % 60;
+  gameTimer.innerText = `${minutes}:${secon}`;
+}
+
+function showStopButton() {
+  const icon = start.querySelector('.fas');
+  icon.classList.add('fa-stop');
+  icon.classList.remove('fa-play');
+}
+
+function stopGame() {
+  const icon = start.querySelector('.fas');
+  icon.classList.add('fa-play');
+  icon.classList.remove('fa-stop');
+  stopGameTimer();
+  showPopUpWithText('REPLAY?');
+  hideStartButton();
+}
+
+function hideStartButton() {
+  start.style.visibility = 'hidden';
+}
+
+function showPopUpWithText(text) {
+  alertDiv.classList.add('active');
+  alertState.innerText = `${text}`;
+}
+
+function stopGameTimer() {
+  clearInterval(time);
+}
+
+function showTimerAndScore() {
+  gameTimer.style.visibility = 'visible';
+  gameCount.style.visibility = 'visible';
+}
 
 // count down
 let countDown = 9;
@@ -34,7 +114,7 @@ function timer() {
     return;
   }
 }
-setInterval(timer, 1000);
+// setInterval(timer, 1000);
 
 // random
 // const playgroundY = playground.getBoundingClientRect().height;
@@ -81,15 +161,16 @@ function addItem(className, count, imgPath) {
 
 function initGame() {
   console.log(playgroundRect);
-  addItem('carrot', 5, './img/carrot.png');
-  addItem('bug', 5, './img/bug.png');
+  items.innerHTML = '';
+  gameCount.innerText = CARROT;
+
+  addItem('carrot', CARROT, './img/carrot.png');
+  addItem('bug', BUG, './img/bug.png');
 }
 
 function randomNumber(min, max) {
   return Math.random() * (max - min) + min;
 }
-
-initGame();
 
 // carrot pull
 function carrotPull() {
@@ -98,35 +179,42 @@ function carrotPull() {
     console.log(element.dataset.id);
     element.addEventListener('click', e => {
       const carrotId = e.target.dataset.id;
+      console.log('click');
       const toBePull = document.querySelector(`.carrot[data-id="${carrotId}"`);
       toBePull.remove();
       console.log(carrotId);
     });
   });
 }
-carrotPull();
-
 // count carrot
 function countCarrot() {
   document.addEventListener('click', () => {
     const carrots = document.querySelectorAll('.carrot');
     const countNumber = carrots.length;
     console.log(countNumber);
-    count.innerHTML = countNumber;
+    gameCount.innerHTML = countNumber;
     if (countNumber == '0') {
       alertDiv.classList.add('active');
+      alertState.innerText = 'YOU WON🥰';
+      stopGameTimer();
     }
   });
 }
-countCarrot();
 
 // restart
-restart.addEventListener('click', () => {
-  items.innerHTML = '';
-  initGame();
-  carrotPull();
-  countDown = 10;
-  setInterval(timer, 1000);
+function restartGame() {
+  restart.addEventListener('click', () => {
+    items.innerHTML = '';
+    startGame();
+    start.style.visibility = 'visible';
+    alertDiv.classList.remove('active');
+  });
+}
+restartGame();
 
-  alertDiv.classList.remove('active');
+document.addEventListener('click', e => {
+  console.log(gameTimer.innerText);
 });
+if (gameTimer.innerText === '0:0') {
+  stopGame();
+}
