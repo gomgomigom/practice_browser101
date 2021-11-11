@@ -3,7 +3,7 @@
 const CARROT_SIZE = 80;
 const CARROT = 7;
 const BUG = 7;
-const GAME_DURATION_SECOND = 3;
+const GAME_DURATION_SECOND = 7;
 
 const start = document.querySelector('.start');
 const playground = document.querySelector('.playground');
@@ -28,7 +28,6 @@ function startBtn() {
     } else {
       startGame();
     }
-    started = !started;
 
     // if (e.target.tagName !== 'I') {
     //   return;
@@ -43,12 +42,26 @@ function startBtn() {
 startBtn();
 
 function startGame() {
+  started = true;
   initGame();
   countCarrot();
-  carrotPull();
   showStopButton();
   showTimerAndScore();
   startGameTimer();
+}
+
+function stopGame() {
+  started = false;
+  const icon = start.querySelector('.fas');
+  icon.classList.add('fa-play');
+  icon.classList.remove('fa-stop');
+  stopGameTimer();
+  showPopUpWithText('REPLAY?');
+  hideStartButton();
+}
+
+function finishGame() {
+  started = false;
 }
 
 function startGameTimer() {
@@ -73,15 +86,6 @@ function showStopButton() {
   const icon = start.querySelector('.fas');
   icon.classList.add('fa-stop');
   icon.classList.remove('fa-play');
-}
-
-function stopGame() {
-  const icon = start.querySelector('.fas');
-  icon.classList.add('fa-play');
-  icon.classList.remove('fa-stop');
-  stopGameTimer();
-  showPopUpWithText('REPLAY?');
-  hideStartButton();
 }
 
 function hideStartButton() {
@@ -114,32 +118,8 @@ function timer() {
     return;
   }
 }
-// setInterval(timer, 1000);
-
-// random
-// const playgroundY = playground.getBoundingClientRect().height;
-// const playgroundX = playground.getBoundingClientRect().width;
 
 // let id = 0;
-// function repeat(itemsName) {
-//   for (let i = 0; i < 10; i++) {
-//     let randomX = playgroundX * Math.random() * 0.9;
-//     let randomY = playgroundY * Math.random() * 0.7;
-//     const obj = document.createElement('img');
-//     obj.setAttribute('style', `top: ${randomY}px; left:${randomX}px;`);
-//     obj.setAttribute('src', `./img/${itemsName}.png`);
-//     obj.setAttribute('alt', `${itemsName}`);
-//     obj.setAttribute('data-id', id);
-//     obj.setAttribute('class', `${itemsName}`);
-//     items.appendChild(obj);
-//     id++;
-//   }
-// }
-// repeat('carrot');
-// repeat('bug');
-// random carrot & bug
-
-let id = 0;
 function addItem(className, count, imgPath) {
   const x1 = 0;
   const y1 = 0;
@@ -149,13 +129,13 @@ function addItem(className, count, imgPath) {
     const item = document.createElement('img');
     item.setAttribute('class', className);
     item.setAttribute('src', imgPath);
-    item.setAttribute('data-id', id);
+    // item.setAttribute('data-id', id);
     const x = randomNumber(x1, x2);
     const y = randomNumber(y1, y2);
     item.style.top = `${y}px`;
     item.style.left = `${x}px`;
     items.appendChild(item);
-    id++;
+    // id++;
   }
 }
 
@@ -172,20 +152,6 @@ function randomNumber(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-// carrot pull
-function carrotPull() {
-  const carrots = document.querySelectorAll('.carrot');
-  carrots.forEach(element => {
-    console.log(element.dataset.id);
-    element.addEventListener('click', e => {
-      const carrotId = e.target.dataset.id;
-      console.log('click');
-      const toBePull = document.querySelector(`.carrot[data-id="${carrotId}"`);
-      toBePull.remove();
-      console.log(carrotId);
-    });
-  });
-}
 // count carrot
 function countCarrot() {
   document.addEventListener('click', () => {
@@ -212,9 +178,68 @@ function restartGame() {
 }
 restartGame();
 
-document.addEventListener('click', e => {
-  console.log(gameTimer.innerText);
-});
-if (gameTimer.innerText === '0:0') {
-  stopGame();
+playground.addEventListener('click', onFieldClick);
+
+function onFieldClick(event) {
+  if (!started) {
+    return;
+  }
+  const target = event.target;
+  console.log(target);
+  if (target.matches('.carrot')) {
+    console.log('당근');
+    target.remove();
+    score++;
+    updateScoreBoard();
+    console.log(score);
+  } else if (target.matches('.bug')) {
+    console.log('벌레!!');
+    stopGameTimer();
+    showPopUpWithText('YOU LOSE 💩');
+    finishGame();
+  }
 }
+
+function updateScoreBoard() {
+  gameCount.innerText = CARROT - score;
+}
+
+// setInterval(timer, 1000);
+
+// random
+// const playgroundY = playground.getBoundingClientRect().height;
+// const playgroundX = playground.getBoundingClientRect().width;
+
+// let id = 0;
+// function repeat(itemsName) {
+//   for (let i = 0; i < 10; i++) {
+//     let randomX = playgroundX * Math.random() * 0.9;
+//     let randomY = playgroundY * Math.random() * 0.7;
+//     const obj = document.createElement('img');
+//     obj.setAttribute('style', `top: ${randomY}px; left:${randomX}px;`);
+//     obj.setAttribute('src', `./img/${itemsName}.png`);
+//     obj.setAttribute('alt', `${itemsName}`);
+//     obj.setAttribute('data-id', id);
+//     obj.setAttribute('class', `${itemsName}`);
+//     items.appendChild(obj);
+//     id++;
+//   }
+// }
+// repeat('carrot');
+// repeat('bug');
+// random carrot & bug
+
+// // carrot pull
+// function carrotPull() {
+//   const carrots = document.querySelectorAll('.carrot');
+//   carrots.forEach(element => {
+//     console.log(element.dataset.id);
+//     element.addEventListener('click', e => {
+//       const carrotId = e.target.dataset.id;
+//       console.log('click');
+//       const toBePull = document.querySelector(`.carrot[data-id="${carrotId}"`);
+//       toBePull.remove();
+//       console.log(carrotId);
+//     });
+//   });
+// }
