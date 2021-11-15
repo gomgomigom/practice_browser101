@@ -15,6 +15,14 @@ const restart = document.querySelector('.restart');
 const gameTimer = document.querySelector('.timer');
 const gameCount = document.querySelector('.count');
 
+const carrotSound = new Audio('./sound/carrot_pull.mp3');
+const alertSound = new Audio('./sound/alert.wav');
+const bgSound = new Audio('./sound/bg.mp3');
+const bugSound = new Audio('./sound/bug_pull.mp3');
+const winSound = new Audio('./sound/game_win.mp3');
+
+carrotSound.volume = 1;
+
 let started = false;
 let score = 0;
 let time = undefined;
@@ -43,8 +51,8 @@ startBtn();
 
 function startGame() {
   started = true;
+  playSound(bgSound);
   initGame();
-  countCarrot();
   showStopButton();
   showTimerAndScore();
   startGameTimer();
@@ -58,12 +66,25 @@ function stopGame() {
   stopGameTimer();
   showPopUpWithText('REPLAY?');
   hideStartButton();
+  playSound(alertSound);
+  stopSound(bgSound);
 }
 
 function finishGame(win) {
   started = false;
   hideStartButton();
+  if (win) {
+    playSound(winSound);
+  } else {
+    playSound(bugSound);
+  }
+  stopGameTimer();
+  stopSound(bgSound);
   showPopUpWithText(win ? 'YOU WON🎊' : 'YOU LOST 💩');
+}
+
+function stopSound(sound) {
+  sound.pause();
 }
 
 function startGameTimer() {
@@ -89,6 +110,7 @@ function showStopButton() {
   const icon = start.querySelector('.fas');
   icon.classList.add('fa-stop');
   icon.classList.remove('fa-play');
+  start.style.visibility = 'visible';
 }
 
 function hideStartButton() {
@@ -142,25 +164,10 @@ function randomNumber(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-// count carrot
-function countCarrot() {
-  document.addEventListener('click', () => {
-    const carrots = document.querySelectorAll('.carrot');
-    const countNumber = carrots.length;
-    console.log(countNumber);
-    gameCount.innerHTML = countNumber;
-    if (countNumber == '0') {
-      alertDiv.classList.add('active');
-      alertState.innerText = 'YOU WON🥰';
-      stopGameTimer();
-    }
-  });
-}
-
 // restart
 function restartGame() {
   restart.addEventListener('click', () => {
-    items.innerHTML = '';
+    score = 0;
     startGame();
     start.style.visibility = 'visible';
     alertDiv.classList.remove('active');
@@ -179,6 +186,7 @@ function onFieldClick(event) {
   if (target.matches('.carrot')) {
     console.log('당근');
     target.remove();
+    playSound(carrotSound);
     score++;
     updateScoreBoard();
     if (score === CARROT) {
@@ -186,10 +194,14 @@ function onFieldClick(event) {
     }
   } else if (target.matches('.bug')) {
     console.log('벌레!!');
-    stopGameTimer();
     showPopUpWithText('YOU LOSE 💩');
     finishGame(false);
   }
+}
+
+function playSound(sound) {
+  sound.currentTime = 0;
+  sound.play();
 }
 
 function updateScoreBoard() {
