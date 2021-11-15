@@ -101,6 +101,8 @@ button i {
   line-height: 19px;
   text-align: center;
   visibility: hidden;
+  user-select: none;
+  cursor: auto;
 }
 
 .count {
@@ -114,6 +116,8 @@ button i {
   color: white;
   font-size: 20px;
   visibility: hidden;
+  user-select: none;
+  cursor: auto;
 }
 
 /* items */

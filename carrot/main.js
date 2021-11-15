@@ -5,6 +5,7 @@ let CARROT = 1;
 let BUG = 1;
 let GAME_DURATION_SECOND = 14;
 let LEVEL = 0;
+let playSpeed = 1;
 
 const start = document.querySelector('.start');
 const playground = document.querySelector('.playground');
@@ -21,8 +22,6 @@ const alertSound = new Audio('./sound/alert.wav');
 const bgSound = new Audio('./sound/bg.mp3');
 const bugSound = new Audio('./sound/bug_pull.mp3');
 const winSound = new Audio('./sound/game_win.mp3');
-
-carrotSound.volume = 1;
 
 let started = false;
 let score = 0;
@@ -94,6 +93,8 @@ function changeLevel(win) {
     BUG = BUG + 2;
     LEVEL++;
     GAME_DURATION_SECOND--;
+    playSpeed = playSpeed + 0.1;
+    bgSound.playbackRate = playSpeed;
   } else {
     return;
   }
