@@ -127,4 +127,10 @@ button i {
 .bug {
   position: absolute;
   cursor: pointer;
+  transition: all 100ms ease-in-out;
+}
+
+.carrot:hover,
+.bug:hover {
+  transform: scale(1.15);
 }

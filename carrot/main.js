@@ -1,9 +1,10 @@
 'use strict';
 
-const CARROT_SIZE = 80;
-const CARROT = 5;
-const BUG = 5;
-const GAME_DURATION_SECOND = 5;
+let CARROT_SIZE = 80;
+let CARROT = 1;
+let BUG = 1;
+let GAME_DURATION_SECOND = 14;
+let LEVEL = 0;
 
 const start = document.querySelector('.start');
 const playground = document.querySelector('.playground');
@@ -80,7 +81,22 @@ function finishGame(win) {
   }
   stopGameTimer();
   stopSound(bgSound);
-  showPopUpWithText(win ? 'YOU WON🎊' : 'YOU LOST 💩');
+  changeLevel(win);
+  if (LEVEL >= 10) {
+    LEVEL = `${LEVEL} 👑`;
+  }
+  showPopUpWithText(win ? `YOU WON🎊 LEVEL: ${LEVEL}` : `YOU LOST 💩 LEVEL: ${LEVEL}`);
+}
+
+function changeLevel(win) {
+  if (win) {
+    CARROT = CARROT + 1;
+    BUG = BUG + 2;
+    LEVEL++;
+    GAME_DURATION_SECOND--;
+  } else {
+    return;
+  }
 }
 
 function stopSound(sound) {
