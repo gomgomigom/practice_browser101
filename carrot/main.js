@@ -1,9 +1,9 @@
 'use strict';
 
 const CARROT_SIZE = 80;
-const CARROT = 7;
-const BUG = 7;
-const GAME_DURATION_SECOND = 7;
+const CARROT = 5;
+const BUG = 5;
+const GAME_DURATION_SECOND = 5;
 
 const start = document.querySelector('.start');
 const playground = document.querySelector('.playground');
@@ -70,6 +70,8 @@ function startGameTimer() {
   time = setInterval(() => {
     if (remainingTimeSec <= 0) {
       clearInterval(time);
+      showPopUpWithText('Time OUT 💩');
+      finishGame();
       return;
     }
     updateTimerText(--remainingTimeSec);
@@ -104,19 +106,6 @@ function stopGameTimer() {
 function showTimerAndScore() {
   gameTimer.style.visibility = 'visible';
   gameCount.style.visibility = 'visible';
-}
-
-// count down
-let countDown = 9;
-function timer() {
-  if (countDown >= 0) {
-    document.querySelector('.timer').innerHTML = `
-    0:${countDown}
-    `;
-    countDown--;
-  } else {
-    return;
-  }
 }
 
 // let id = 0;
