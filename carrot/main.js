@@ -60,8 +60,10 @@ function stopGame() {
   hideStartButton();
 }
 
-function finishGame() {
+function finishGame(win) {
   started = false;
+  hideStartButton();
+  showPopUpWithText(win ? 'YOU WON🎊' : 'YOU LOST 💩');
 }
 
 function startGameTimer() {
@@ -70,8 +72,7 @@ function startGameTimer() {
   time = setInterval(() => {
     if (remainingTimeSec <= 0) {
       clearInterval(time);
-      showPopUpWithText('Time OUT 💩');
-      finishGame();
+      finishGame(CARROT === score);
       return;
     }
     updateTimerText(--remainingTimeSec);
@@ -180,12 +181,14 @@ function onFieldClick(event) {
     target.remove();
     score++;
     updateScoreBoard();
-    console.log(score);
+    if (score === CARROT) {
+      finishGame(true);
+    }
   } else if (target.matches('.bug')) {
     console.log('벌레!!');
     stopGameTimer();
     showPopUpWithText('YOU LOSE 💩');
-    finishGame();
+    finishGame(false);
   }
 }
 
