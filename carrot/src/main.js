@@ -1,6 +1,8 @@
 'use strict';
 
 import PopUp from './popup.js';
+import Field from './field.js';
+import * as sound from './sound.js';
 
 let CARROT_SIZE = 80;
 let CARROT = 1;
@@ -8,6 +10,10 @@ let BUG = 1;
 let GAME_DURATION_SECOND = 14;
 let LEVEL = 0;
 let playSpeed = 1;
+
+let started = false;
+let score = 0;
+let time = undefined;
 
 const start = document.querySelector('.start');
 const playground = document.querySelector('.playground');
@@ -23,10 +29,23 @@ const bugSound = new Audio('./sound/bug_pull.mp3');
 const winSound = new Audio('./sound/game_win.mp3');
 
 const gameFinishBanner = new PopUp();
+const gameField = new Field(CARROT, BUG);
+gameField.setClickListener(onItemClick);
 
-let started = false;
-let score = 0;
-let time = undefined;
+function onItemClick(item) {
+  if (!started) {
+    return;
+  }
+  if (item === 'carrot') {
+    score++;
+    updateScoreBoard();
+    if (score === CARROT) {
+      finishGame(true);
+    }
+  } else if (item === 'bug') {
+    finishGame(false);
+  }
+}
 
 // start button
 function startBtn() {
@@ -43,8 +62,7 @@ startBtn();
 
 function startGame() {
   started = true;
-  score = 0;
-  playSound(bgSound);
+  sound.playBg(playSpeed);
   initGame();
   hideAlert();
   showStopButton();
@@ -64,25 +82,31 @@ function stopGame() {
   stopGameTimer();
   gameFinishBanner.showWithText('REPLAY?');
   hideStartButton();
-  playSound(alertSound);
-  stopSound(bgSound);
+  sound.playAlert();
+  sound.stopBg();
 }
 
 function finishGame(win) {
   started = false;
   hideStartButton();
   if (win) {
-    playSound(winSound);
+    sound.playWin();
   } else {
-    playSound(bugSound);
+    sound.playBug();
   }
   stopGameTimer();
-  stopSound(bgSound);
+  sound.stopBg();
   changeLevel(win);
   if (LEVEL >= 10) {
     LEVEL = `${LEVEL}👑`;
   }
   gameFinishBanner.showWithText(win ? `YOU WON🎊 LEVEL: ${LEVEL}` : `YOU LOST 💩 LEVEL: ${LEVEL}`);
+}
+
+function initGame() {
+  score = 0;
+  gameCount.innerText = CARROT;
+  gameField.init(CARROT, BUG);
 }
 
 function changeLevel(win) {
@@ -96,10 +120,6 @@ function changeLevel(win) {
   } else {
     return;
   }
-}
-
-function stopSound(sound) {
-  sound.pause();
 }
 
 function startGameTimer() {
@@ -141,70 +161,9 @@ function showTimerAndScore() {
   gameCount.style.visibility = 'visible';
 }
 
-// let id = 0;
-function addItem(className, count, imgPath) {
-  const x1 = 0;
-  const y1 = 0;
-  const x2 = playgroundRect.width - CARROT_SIZE;
-  const y2 = playgroundRect.height - CARROT_SIZE;
-  for (let i = 0; i < count; i++) {
-    const item = document.createElement('img');
-    item.setAttribute('class', className);
-    item.setAttribute('src', imgPath);
-    // item.setAttribute('data-id', id);
-    const x = randomNumber(x1, x2);
-    const y = randomNumber(y1, y2);
-    item.style.top = `${y}px`;
-    item.style.left = `${x}px`;
-    items.appendChild(item);
-    // id++;
-  }
-}
-
-function initGame() {
-  console.log(playgroundRect);
-  items.innerHTML = '';
-  gameCount.innerText = CARROT;
-
-  addItem('carrot', CARROT, './img/carrot.png');
-  addItem('bug', BUG, './img/bug.png');
-}
-
-function randomNumber(min, max) {
-  return Math.random() * (max - min) + min;
-}
-
 gameFinishBanner.setClickListener(() => {
   startGame();
 });
-
-playground.addEventListener('click', onFieldClick);
-
-function onFieldClick(event) {
-  if (!started) {
-    return;
-  }
-  const target = event.target;
-  console.log(target);
-  if (target.matches('.carrot')) {
-    console.log('당근');
-    target.remove();
-    playSound(carrotSound);
-    score++;
-    updateScoreBoard();
-    if (score === CARROT) {
-      finishGame(true);
-    }
-  } else if (target.matches('.bug')) {
-    console.log('벌레!!');
-    finishGame(false);
-  }
-}
-
-function playSound(sound) {
-  sound.currentTime = 0;
-  sound.play();
-}
 
 function updateScoreBoard() {
   gameCount.innerText = CARROT - score;

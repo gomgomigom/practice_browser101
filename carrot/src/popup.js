@@ -7,7 +7,7 @@ export default class PopUp {
     this.popUpRefresh = document.querySelector('.restart');
     this.popUpRefresh.addEventListener('click', () => {
       this.onClick && this.onClick();
-      hide();
+      this.hide();
     });
   }
 
