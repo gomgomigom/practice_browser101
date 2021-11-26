@@ -103,15 +103,6 @@ class Game {
     this.showStopButton();
     this.stopGameTimer();
     this.hideStartButton();
-    if (reason == Reason.win) {
-      sound.playWin();
-    }
-    if (reason == Reason.cancel) {
-      sound.playAlert();
-    }
-    if (reason == Reason.lose) {
-      sound.playBug();
-    }
     sound.stopBg();
     this.onGameStop && this.onGameStop(reason, this.level);
     this.changeLevel(reason);
@@ -142,7 +133,7 @@ class Game {
     this.time = setInterval(() => {
       if (remainingTimeSec <= 0) {
         clearInterval(this.time);
-        this.finish(this.carrotCount === this.score);
+        this.stop(this.carrotCount === this.score ? Reason.win : Reason.lose);
         return;
       }
       this.updateTimerText(--remainingTimeSec);
