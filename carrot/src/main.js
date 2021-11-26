@@ -1,13 +1,20 @@
 'use strict';
 import PopUp from './popup.js';
-import Game from './game.js';
+import GameBuilder from './game.js';
 
 const gameFinishBanner = new PopUp();
 gameFinishBanner.setClickListener(() => {
-  game.start();
+  gameBuilder.start();
 });
 
-const game = new Game(13, 1, 2, 1, 1);
-game.setGameStopListener((reason) => {
+const gameBuilder = new GameBuilder()
+  .gameDuration(13)
+  .carrotCount(1)
+  .bugCount(2)
+  .level(1)
+  .playSpeed(1)
+  .build();
+
+gameBuilder.setGameStopListener((reason) => {
   console.log(reason);
 });
