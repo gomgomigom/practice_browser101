@@ -54,7 +54,7 @@ class Game {
     this.startBtn = document.querySelector('.start');
     this.startBtn.addEventListener('click', () => {
       if (this.started) {
-        this.stop();
+        this.stop(Reason.cancel);
       } else {
         this.start();
       }
@@ -78,10 +78,10 @@ class Game {
       this.score++;
       this.updateScoreBoard();
       if (this.score === this.carrotCount) {
-        this.finish(true);
+        this.stop(Reason.win);
       }
     } else if (item === 'bug') {
-      this.finish(false);
+      this.stop(Reason.lose);
     }
   };
 
@@ -98,36 +98,30 @@ class Game {
     sound.playBg(this.playSpeed);
   }
 
-  stop() {
-    this.showStopButton();
+  stop(reason) {
     this.started = false;
+    this.showStopButton();
     this.stopGameTimer();
     this.hideStartButton();
-    sound.playAlert();
+    if (reason == Reason.win) {
+      sound.playWin();
+    }
+    if (reason == Reason.cancel) {
+      sound.playAlert();
+    }
+    if (reason == Reason.lose) {
+      sound.playBug();
+    }
     sound.stopBg();
-    this.onGameStop && this.onGameStop(Reason.cancel, this.level);
+    this.onGameStop && this.onGameStop(reason, this.level);
+    this.changeLevel(reason);
+    if (this.level >= 10) {
+      this.level = `${this.level}👑`;
+    }
   }
 
   hideAlert() {
     this.gameFinishBanner.hide();
-  }
-
-  finish(win) {
-    this.started = false;
-    this.hideStartButton();
-    if (win) {
-      sound.playWin();
-    } else {
-      sound.playBug();
-    }
-    this.stopGameTimer();
-    sound.stopBg();
-    this.onGameStop &&
-      this.onGameStop(win ? Reason.win : Reason.lose, this.level);
-    this.changeLevel(win);
-    if (this.level >= 10) {
-      this.level = `${this.level}👑`;
-    }
   }
 
   showStopButton() {
@@ -179,8 +173,8 @@ class Game {
     this.startBtn.style.visibility = 'hidden';
   }
 
-  changeLevel(win) {
-    if (win) {
+  changeLevel(reason) {
+    if (reason == Reason.win) {
       this.carrotCount = this.carrotCount + 1;
       this.bugCount = this.bugCount + 2;
       this.level++;

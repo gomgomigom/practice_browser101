@@ -12,10 +12,6 @@ const game = new GameBuilder()
   .playSpeed(1)
   .build();
 
-// let level = 1;
-// if (level >= 10) {
-//   level = `${level}👑`;
-// }
 game.setGameStopListener((reason, level) => {
   console.log(reason, level);
   let message;
