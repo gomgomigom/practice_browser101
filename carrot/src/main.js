@@ -1,13 +1,10 @@
 'use strict';
 import PopUp from './popup.js';
-import GameBuilder from './game.js';
+import { GameBuilder, Reason } from './game.js';
 
 const gameFinishBanner = new PopUp();
-gameFinishBanner.setClickListener(() => {
-  gameBuilder.start();
-});
 
-const gameBuilder = new GameBuilder()
+const game = new GameBuilder()
   .gameDuration(13)
   .carrotCount(1)
   .bugCount(2)
@@ -15,6 +12,27 @@ const gameBuilder = new GameBuilder()
   .playSpeed(1)
   .build();
 
-gameBuilder.setGameStopListener((reason) => {
-  console.log(reason);
+// let level = 1;
+// if (level >= 10) {
+//   level = `${level}👑`;
+// }
+game.setGameStopListener((reason, level) => {
+  console.log(reason, level);
+  let message;
+  switch (reason) {
+    case Reason.cancel:
+      message = `Level:${level}  RESTART❓`;
+      break;
+    case Reason.win:
+      message = `YOU WON🎊 LEVEL:${level}`;
+      break;
+    case Reason.lose:
+      message = `Level:${level}💩YOU LOST💩`;
+      break;
+  }
+  gameFinishBanner.showWithText(message);
+});
+
+gameFinishBanner.setClickListener(() => {
+  game.start();
 });

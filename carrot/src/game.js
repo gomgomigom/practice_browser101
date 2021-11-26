@@ -3,7 +3,13 @@ import PopUp from './popup.js';
 import Field from './field.js';
 import * as sound from './sound.js';
 
-export default class GameBuilder {
+export const Reason = Object.freeze({
+  win: 'win',
+  lose: 'lose',
+  cancel: 'cancel',
+});
+
+export class GameBuilder {
   gameDuration(duration) {
     this.gameDuration = duration;
     return this;
@@ -97,10 +103,9 @@ class Game {
     this.started = false;
     this.stopGameTimer();
     this.hideStartButton();
-    this.gameFinishBanner.showWithText('RESTART?');
     sound.playAlert();
     sound.stopBg();
-    this.onGameStop && this.onGameStop('cancel');
+    this.onGameStop && this.onGameStop(Reason.cancel, this.level);
   }
 
   hideAlert() {
@@ -117,15 +122,12 @@ class Game {
     }
     this.stopGameTimer();
     sound.stopBg();
-    this.gameFinishBanner.showWithText(
-      win ? `YOU WIN🥰 LEVEL:${this.level}` : `YOU LOST💩 LEVEL:${this.level}`
-    );
+    this.onGameStop &&
+      this.onGameStop(win ? Reason.win : Reason.lose, this.level);
     this.changeLevel(win);
     if (this.level >= 10) {
       this.level = `${this.level}👑`;
     }
-
-    this.onGameStop && this.onGameStop(win ? 'win' : 'lose');
   }
 
   showStopButton() {
