@@ -23,6 +23,7 @@ game.setGameStopListener((reason, level) => {
       break;
     case Reason.win:
       sound.playWin();
+
       message = `YOU WON🎊 LEVEL:${level}`;
       break;
     case Reason.lose:
